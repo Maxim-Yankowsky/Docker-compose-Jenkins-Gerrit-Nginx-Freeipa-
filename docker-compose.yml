@@ -1,0 +1,60 @@
+version: '3.7'
+
+services:
+#  nginx:
+#    image: nginx
+#    ports:
+#      - "443:443"
+#    depends_on:
+#      - gerrit
+#      - jenkins
+#    volumes:
+#      - /etc/timezone:/etc/timezone:ro
+#      - /etc/localtime:/etc/localtime:ro
+#      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+#      - ./nginx/log:/var/log/nginx
+
+  gerrit:
+    image: gerritcodereview/gerrit
+    environment:
+      - CANONICAL_WEB_URL=http://54.219.142.199/gerrit
+    ports:
+      - 8080:8080
+    container_name: gerrit
+    volumes:
+      - ./gerrit/etc:/var/gerrit/etc
+      - ./gerrit/git:/var/gerrit/git
+      - ./gerrit/index:/var/gerrit/index
+      - ./gerrit/cache:/var/gerrit/cache
+      - ./gerrit/plugins:/var/gerrit/plugins
+      - ./gerrit/logs:/var/gerrit/logs
+  #  entrypoint: java -jar /var/gerrit/bin/gerrit.war init -d /var/gerrit
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    privileged: true
+    user: root
+    ports:
+      - 8081:8081
+      - 50000:50000
+    container_name: jenkins
+    volumes:
+      - ~/jenkins:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/local/bin/docker:/usr/local/bin/docker
+
+#  freeipa:
+#    image: freeipa/freeipa-server:ubuntu 18.04
+#    container_name: freeipa
+#    hostname: freeipa.local.xetus.com
+#    domainname: freeipa.local.xetus.com
+#    privileged: true
+#    volumes:
+#      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+#      - "datavol:/data"
+#      - "./server/ipa-volume:/root/shared"
+#      - "./server/config:/root/pw-portal/config"
+
+
+
+      
